@@ -65,5 +65,8 @@ const userSchema = new Schema(
 
 const userModel = mongoose.model('userModel', userSchema);
 
+// User.prototype.validPassword = async (password) => {
+//     return await bcrypt.compare(password, this.password);
+//   };
 
 module.exports = userModel;

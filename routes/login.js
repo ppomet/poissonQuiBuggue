@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const loginController = require("../controller/login");
-const loginValidator = require('../middleware/validator/loginValidator');
+// const express = require('express');
+const router = require('express').Router();
+const {loginValidator, mockedOptions} = require("../controller/login");
+const {loginRequestValidator} = require('../middleware/validator/loginValidator');
 const dotenv = require('dotenv');
 
-loginC = new loginController();
+// loginC = new loginController();
 dotenv.config();
 
 const requireAuth = (req, res, next) => {
@@ -19,9 +19,8 @@ router.get('/', function(req, res, next) {
     res.render('page/login', loginC.option());
 });
 
-router.post('/', function(req, res, next){
-    loginValidator;
-    loginC.loginValidation(req, res, next);
+router.post('/',[loginRequestValidator], function(req, res, next){
+    loginValidator(req, res, next);
 });
 
 

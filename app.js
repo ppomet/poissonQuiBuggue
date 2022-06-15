@@ -31,10 +31,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/', indexRouter);
 
@@ -52,27 +54,23 @@ app.use('/admin', adminRouter);
 
 
 
-//middlware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-
 app.use(session({
   secret: 'bddffzfe85241fdfezfez',
   resave: false,
   saveUninitialized: false
-}));
+}));// application stateful et du coup pas strictement REST
 
 //init flash
-app.use(flash());
-app.use((req, res, next) =>{
-  if(req.user){
-    res.locals.user = req.user;
-  }
-  res.locals.error = req.flash('error');
-  res.locals.success = req.flash('success');
-  res.locals.errorForm = req.flash('errorForm');
-  next();
-})
+// app.use(flash());
+// app.use((req, res, next) =>{
+//   if(req.user){
+//     res.locals.user = req.user;
+//   }
+//   res.locals.error = req.flash('error');
+//   res.locals.success = req.flash('success');
+//   res.locals.errorForm = req.flash('errorForm');
+//   next();
+// })
 
 
 
@@ -87,10 +85,18 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
+    let errorStatus;
+  if (err.status) {
+    errorStatus = err.status;
+  }
 
-  // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+  if (errorStatus === 404) {
+    res.render('404');
+  } else {
+    // render the error page
+      res.status(err.status || 500);
+      res.render('error');
+  }
 });
 
 module.exports = app;

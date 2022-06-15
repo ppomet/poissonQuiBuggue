@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controller/admin');
+const jwtMiddleware = require("../middleware/auth/authentication")
 
 const adminC = new adminController();
 const adminUser = {
@@ -21,7 +22,8 @@ const requireAuth = (req, res, next) => {
     }
 };
 
-router.get('/', function(req, res, next) {
+router.get('/',[jwtMiddleware()], function(req, res, next) {
+    console.log(req.user);
     res.render('page/admin', adminC.option());
 });
 

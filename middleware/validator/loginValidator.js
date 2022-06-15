@@ -1,7 +1,7 @@
 const { Validator } = require ( 'node-input-validator' );
 
 
-const loginValidator = (req, res, next) =>{
+const loginRequestValidator = (req, res, next) =>{
     const v = new Validator(req.body, {
         username: 'required',
         password: 'required'
@@ -10,7 +10,7 @@ const loginValidator = (req, res, next) =>{
         if (!matched) {
             //errors
             console.log(v.errors);
-            req.flash('errorForm', v.errors);
+            // req.flash('errorForm', v.errors);
             return res.redirect('/login');
             // return res.redirect('/users/login');
         }
@@ -19,4 +19,4 @@ const loginValidator = (req, res, next) =>{
 }
 
 
-module.exports = loginValidator;
+module.exports = {loginRequestValidator};
